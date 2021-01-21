@@ -1,5 +1,5 @@
 <script>
-  import { setSuite } from './context';
+  import { setSuite } from './lib/context';
 
   // export let config = {
   //   timeout: 5000,

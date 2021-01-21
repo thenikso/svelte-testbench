@@ -4,3 +4,5 @@ export { default as Test } from './Test.svelte';
 export { default as Given } from './Given.svelte';
 export { default as Should } from './Should.svelte';
 export * from './prepare';
+export * from './assert';
+export * from './errors';

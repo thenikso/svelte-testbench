@@ -1,4 +1,4 @@
-import { equal as eq } from './utils';
+import { equal as eq } from './lib/utils';
 import { AssertionError } from './errors';
 
 export const equal = (a, b) => {

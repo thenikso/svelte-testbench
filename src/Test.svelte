@@ -1,7 +1,7 @@
 <script>
   import TestSection from './components/TestSection.svelte';
-  import { setTest } from './context';
-  import { setTimeout } from './utils';
+  import { setTest } from './lib/context';
+  import { setTimeout } from './lib/utils';
   import { TimeoutError } from './errors';
   import { equal } from './assert';
 

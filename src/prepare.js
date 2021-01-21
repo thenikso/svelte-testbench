@@ -1,5 +1,5 @@
-import { defer } from './utils';
-import { getTest, getSection } from './context';
+import { defer } from './lib/utils';
+import { getTest, getSection } from './lib/context';
 
 export const nodes = (wrapper) => Array.from(wrapper.childNodes);
 

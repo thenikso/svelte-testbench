@@ -1,5 +1,5 @@
 <script>
-  import { getTest, setSection } from './context';
+  import { getTest, setSection } from './lib/context';
   import { nodes, select } from './prepare';
 
   export let expect;
