@@ -1,6 +1,5 @@
 <script>
   import { getTest, setSection } from './lib/context';
-  import resolvePrepare from './lib/resolvePrepare';
 
   export let expect;
   export let prepare = null;
@@ -15,7 +14,7 @@
   let element;
 
   $: if (expect && element) {
-    test.setExpected(expect, element, resolvePrepare(prepare));
+    test.setExpected(expect, element, prepare);
   }
 </script>
 

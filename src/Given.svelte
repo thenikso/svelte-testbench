@@ -1,6 +1,5 @@
 <script>
   import { getTest, setSection } from './lib/context';
-  import resolvePrepare from './lib/resolvePrepare';
 
   export let actual;
   export let prepare = null;
@@ -15,7 +14,7 @@
   let element;
 
   $: if (actual && element) {
-    test.setActual(actual, element, resolvePrepare(prepare));
+    test.setActual(actual, element, prepare);
   }
 </script>
 

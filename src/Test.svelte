@@ -1,12 +1,20 @@
 <script>
+  import { readable } from 'svelte/store';
   import TestSection from './components/TestSection.svelte';
-  import { setTest } from './lib/context';
+  import { setTest, getDescribe } from './lib/context';
   import { setTimeout } from './lib/utils';
   import { TimeoutError } from './errors';
   import { equal } from './assert';
+  import resolvePrepare from './lib/resolvePrepare';
+  import { PREPARING, PENDING, SUCCESS, FAIL } from './lib/statuses';
 
-  export let assert = equal;
-  export let timeout = 5000;
+  export let assert = null;
+  export let prepare = null;
+  export let timeout = null;
+
+  let resolvedAssert = assert || equal;
+  let defaultPrepare = prepare;
+  let resolvedTimeout = timeout || 5000;
 
   let given;
   let actualContainer;
@@ -22,18 +30,23 @@
   let expectedResult;
   let expectedCollapsed = false;
 
-  let testStatus = 'preparing';
+  let testStatus = PREPARING;
+
+  let setStatus;
+  const status = readable(PENDING, (set) => (setStatus = set));
+  $: setStatus && setStatus(testStatus);
 
   let actions = [];
 
   setTest({
+    status,
     setActual(str, wrapper, prepare) {
       if (actualWrapper && actualWrapper !== wrapper) {
         throw new Error('Actual already set');
       }
       given = str;
       actualWrapper = wrapper;
-      actualPrepare = prepare;
+      actualPrepare = resolvePrepare(prepare || defaultPrepare);
     },
     setExpected(str, wrapper, prepare) {
       if (expectedWrapper && expectedWrapper !== wrapper) {
@@ -41,10 +54,15 @@
       }
       should = str;
       expectedWrapper = wrapper;
-      expectedPrepare = prepare;
+      expectedPrepare = resolvePrepare(prepare || defaultPrepare);
     },
     addAction(label, callback) {
       actions = [...actions, { label, callback }];
+    },
+    suggestConfig(config) {
+      resolvedAssert = assert || config.assert || equal;
+      defaultPrepare = prepare || config.prepare;
+      resolvedTimeout = timeout || config.timeout || 5000;
     },
   });
 
@@ -77,31 +95,28 @@
   $: testResult =
     actualResult &&
     expectedResult &&
-    (timeout
-      ? Promise.race([
-          setTimeout(timeout).then(() =>
-            Promise.reject(new TimeoutError(timeout)),
-          ),
-          Promise.all([actualResult, expectedResult]),
-        ])
-      : Promise.all([actualResult, expectedResult])
-    )
-      .then((res) => assert(...res))
+    Promise.race([
+      setTimeout(resolvedTimeout).then(() =>
+        Promise.reject(new TimeoutError(resolvedTimeout)),
+      ),
+      Promise.all([actualResult, expectedResult]),
+    ])
+      .then((res) => resolvedAssert(...res))
       .then((res) => {
-        testStatus = 'success';
+        testStatus = SUCCESS;
         actualCollapsed = !!expectedResult;
         expectedCollapsed = true;
         return res;
       })
       .catch((error) => {
-        testStatus = 'fail';
+        testStatus = FAIL;
         actualCollapsed = false;
         expectedCollapsed = false;
         return Promise.reject(error);
       });
 
-  $: if (testResult && testStatus === 'preparing') {
-    testStatus = 'pending';
+  $: if (testResult && testStatus === PREPARING) {
+    testStatus = PENDING;
   }
 </script>
 

@@ -38,7 +38,6 @@ export const waitOk = () => {
   };
 };
 
-// TODO okTrigger?
 export const giveOk = () => {
   const section = getSection(true);
   const ok = waitingOk.get(section.test);
@@ -99,13 +98,6 @@ export const dataURL = (fallback = null) => (input) => {
     return input.toDataURL();
   }
   return fallback;
-};
-
-// Debug
-
-export const log = (how = 'log') => (input) => {
-  console[how](input);
-  return input;
 };
 
 // Capture
@@ -173,3 +165,10 @@ export const action = (label, innerPrepare) => {
 
 export const copy = (template = (x) => String(x)) => (input) =>
   navigator.clipboard.writeText(template(input));
+
+// Debug
+
+export const log = (how = 'log') => (input) => {
+  console[how](input);
+  return input;
+};

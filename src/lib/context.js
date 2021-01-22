@@ -6,7 +6,7 @@ const TEST = Symbol('test');
 const SECTION = Symbol('section');
 
 export function setSuite(value) {
-  return setContext(SUITE, value);
+  setContext(SUITE, value);
 }
 
 export function getSuite() {
@@ -14,7 +14,7 @@ export function getSuite() {
 }
 
 export function setDescribe(value) {
-  return setContext(DESCRIBE, value);
+  setContext(DESCRIBE, value);
 }
 
 export function getDescribe() {
@@ -22,7 +22,11 @@ export function getDescribe() {
 }
 
 export function setTest(value) {
-  return setContext(TEST, value);
+  setContext(TEST, value);
+  const describe = getDescribe();
+  if (describe) {
+    describe.addTest(value);
+  }
 }
 
 export function getTest(required) {
@@ -34,7 +38,7 @@ export function getTest(required) {
 }
 
 export function setSection(value) {
-  return setContext(SECTION, value);
+  setContext(SECTION, value);
 }
 
 export function getSection(required) {
