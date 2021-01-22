@@ -1,6 +1,7 @@
 import { defer } from './lib/utils';
 import { getTest, getSection } from './lib/context';
 import html2canvas from 'html2canvas';
+import resolvePrepare from './lib/resolvePrepare';
 
 export const nodes = (wrapper) => Array.from(wrapper.childNodes);
 
@@ -68,7 +69,6 @@ export const waitImagesLoaded = (selector = 'img') => async (input) => {
 
 // Conversions
 
-// TODO resize
 export const snapshot = (options) => async (input) => {
   if (Array.isArray(input)) {
     return Promise.all(input.map(snapshot(options)));
@@ -88,6 +88,16 @@ export const snapshot = (options) => async (input) => {
     return html2canvas(input, options);
   }
   throw new Error('Can not convert to canvas');
+};
+
+export const dataURL = (fallback = null) => (input) => {
+  if (Array.isArray(input)) {
+    return input.map(dataURL(fallback));
+  }
+  if (input instanceof HTMLCanvasElement) {
+    return input.toDataURL();
+  }
+  return fallback;
 };
 
 // Debug
@@ -143,3 +153,22 @@ export const snapshotTrigger = () => {
   capturedSnapshots.delete(section.test);
   return capture;
 };
+
+// Actions
+
+export const action = (label, innerPrepare) => {
+  const test = getTest(true);
+  let target;
+  const fn = resolvePrepare(innerPrepare);
+  const callback = () => {
+    fn(target);
+  };
+  return (input) => {
+    target = input;
+    test.addAction(label, callback);
+    return input;
+  };
+};
+
+export const copy = (template = (x) => String(x)) => (input) =>
+  navigator.clipboard.writeText(template(input));

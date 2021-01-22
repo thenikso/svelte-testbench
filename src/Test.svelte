@@ -22,6 +22,8 @@
 
   let testStatus = 'preparing';
 
+  let actions = [];
+
   setTest({
     setActual(str, wrapper, prepare) {
       if (actualWrapper && actualWrapper !== wrapper) {
@@ -38,6 +40,9 @@
       should = str;
       expectedWrapper = wrapper;
       expectedPrepare = prepare;
+    },
+    addAction(label, callback) {
+      actions = [...actions, { label, callback }];
     },
   });
 
@@ -109,6 +114,13 @@
           9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"
         />
       </svg>
+    </div>
+    <div class="actions">
+      {#each actions as action}
+        <button type="button" on:click={action.callback}>
+          {action.label}
+        </button>
+      {/each}
     </div>
     <h3 class="test-title">Given {given}: {should}</h3>
   </header>

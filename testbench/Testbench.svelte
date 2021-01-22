@@ -13,8 +13,18 @@
     snapshotMatch,
     snapshotOnTrigger,
     snapshotTrigger,
+    action,
+    dataURL,
+    copy,
   } from '../src';
   import Reveal from './Reveal.svelte';
+
+  const template = (imgs) => `
+  <div>
+    ${imgs
+      .map((src, i) => `<img alt="expected-${i}" src="${src}" />`)
+      .join('\n')}
+  </div>`;
 </script>
 
 <Test assert={snapshotMatch()}>
@@ -41,7 +51,14 @@
 </Test>
 
 <Test assert={snapshotMatch()}>
-  <Given actual="a revealed content" prepare={[snapshotOnTrigger(), waitOk(), log()]}>
+  <Given
+    actual="a revealed content"
+    prepare={[
+      snapshotOnTrigger(),
+      waitOk(),
+      action('copy', [dataURL(), log(), copy(template)]),
+    ]}
+  >
     <Reveal
       each="li"
       after={1}
