@@ -13,12 +13,14 @@
   let actualWrapper;
   let actualPrepare;
   let actualResult;
+  let actualCollapsed = false;
 
   let should;
   let expectedContainer;
   let expectedWrapper;
   let expectedPrepare;
   let expectedResult;
+  let expectedCollapsed = false;
 
   let testStatus = 'preparing';
 
@@ -87,10 +89,14 @@
       .then((res) => assert(...res))
       .then((res) => {
         testStatus = 'success';
+        actualCollapsed = !!expectedResult;
+        expectedCollapsed = true;
         return res;
       })
       .catch((error) => {
         testStatus = 'fail';
+        actualCollapsed = false;
+        expectedCollapsed = false;
         return Promise.reject(error);
       });
 
@@ -124,10 +130,10 @@
     </div>
     <h3 class="test-title">Given {given}: {should}</h3>
   </header>
-  <TestSection title="Actual">
+  <TestSection title="Actual" bind:collapsed={actualCollapsed}>
     <div bind:this={actualContainer} />
   </TestSection>
-  <TestSection title="Expected">
+  <TestSection title="Expected" bind:collapsed={expectedCollapsed}>
     <div bind:this={expectedContainer} />
   </TestSection>
   <footer>
