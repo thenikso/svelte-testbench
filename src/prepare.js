@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import resolvePrepare from './lib/resolvePrepare';
 
 export const nodes = (wrapper) => Array.from(wrapper.childNodes);
+export const elements = (wrapper) => Array.from(wrapper.children);
 
 export const select = (selector) => (input) => {
   const res = (Array.isArray(input) ? input : [input]).reduce((acc, i) => {

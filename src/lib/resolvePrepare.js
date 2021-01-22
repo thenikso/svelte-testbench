@@ -1,4 +1,4 @@
-import { nodes, select } from '../prepare';
+import { elements, select } from '../prepare';
 
 export default function resolvePrepare(prepare) {
   if (typeof prepare === 'function') {
@@ -18,5 +18,5 @@ export default function resolvePrepare(prepare) {
       return output;
     };
   }
-  return nodes;
+  return elements;
 }

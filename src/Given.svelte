@@ -14,7 +14,7 @@
 
   let element;
 
-  $: if (actual && element && prepare) {
+  $: if (actual && element) {
     test.setActual(actual, element, resolvePrepare(prepare));
   }
 </script>

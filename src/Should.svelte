@@ -14,7 +14,7 @@
 
   let element;
 
-  $: if (expect && element && prepare) {
+  $: if (expect && element) {
     test.setExpected(expect, element, resolvePrepare(prepare));
   }
 </script>
