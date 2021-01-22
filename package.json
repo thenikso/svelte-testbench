@@ -11,9 +11,10 @@
     "prepublish": "rollup -c"
   },
   "devDependencies": {
-    "pixelmatch": "5.2.1",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "html2canvas": "1.0.0-rc.7",
+    "pixelmatch": "5.2.1",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
@@ -22,6 +23,5 @@
     "sirv-cli": "^1.0.0",
     "svelte": "^3.0.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

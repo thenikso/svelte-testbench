@@ -1,15 +1,27 @@
 <script>
-  import { Suite, Describe, Test, Given, Should, waitOk, giveOk } from '../src';
+  import {
+    Suite,
+    Describe,
+    Test,
+    Given,
+    Should,
+    Show,
+    waitOk,
+    giveOk,
+    toCanvas,
+    log,
+    imageMatch,
+  } from '../src';
   import Reveal from './Reveal.svelte';
 </script>
 
-<Test>
-  <Given actual="a revealed content" prepare={[waitOk(), 'li']}>
+<Test assert={imageMatch()}>
+  <Given actual="a revealed content" prepare={[waitOk(), 'li', toCanvas()]}>
     <Reveal after={1} on:reveal={giveOk()}>
       <ul>
         <li>A</li>
         <li>B</li>
-        <li>C</li>
+        <li>D</li>
       </ul>
     </Reveal>
   </Given>
@@ -20,4 +32,8 @@
       <li>C</li>
     </ul>
   </Should>
+  <div slot="fail" let:error>
+    {error.message}
+    <Show element={error.diff} />
+  </div>
 </Test>

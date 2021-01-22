@@ -1,6 +1,6 @@
 <script>
   import { getTest, setSection } from './lib/context';
-  import { resolvePrepare } from './lib/resolvePrepare';
+  import resolvePrepare from './lib/resolvePrepare';
 
   export let expect;
   export let prepare = null;

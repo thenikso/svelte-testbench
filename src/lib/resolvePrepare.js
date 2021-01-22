@@ -1,6 +1,6 @@
 import { nodes, select } from '../prepare';
 
-export function resolvePrepare(prepare) {
+export default function resolvePrepare(prepare) {
   if (typeof prepare === 'function') {
     return prepare;
   }
