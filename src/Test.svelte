@@ -16,14 +16,14 @@
   let defaultPrepare = prepare;
   let resolvedTimeout = timeout || 5000;
 
-  let given;
+  let actualLabel;
   let actualContainer;
   let actualWrapper;
   let actualPrepare;
   let actualResult;
   let actualCollapsed = false;
 
-  let should;
+  let expectedLabel;
   let expectedContainer;
   let expectedWrapper;
   let expectedPrepare;
@@ -44,7 +44,7 @@
       if (actualWrapper && actualWrapper !== wrapper) {
         throw new Error('Actual already set');
       }
-      given = str;
+      actualLabel = str;
       actualWrapper = wrapper;
       actualPrepare = resolvePrepare(prepare || defaultPrepare);
     },
@@ -52,7 +52,7 @@
       if (expectedWrapper && expectedWrapper !== wrapper) {
         throw new Error('Expected already set');
       }
-      should = str;
+      expectedLabel = str;
       expectedWrapper = wrapper;
       expectedPrepare = resolvePrepare(prepare || defaultPrepare);
     },
@@ -143,7 +143,7 @@
         </button>
       {/each}
     </div>
-    <h3 class="test-title">Given {given}: {should}</h3>
+    <h3 class="test-title">Given {actualLabel}: {expectedLabel}</h3>
   </header>
   <TestSection title="Actual" collapsed={actualCollapsed}>
     <div bind:this={actualContainer} />

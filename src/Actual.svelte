@@ -1,20 +1,20 @@
 <script>
   import { getTest, setSection } from './lib/context';
 
-  export let expect;
+  export let given;
   export let prepare = null;
 
   const test = getTest(true);
 
   setSection({
     test,
-    section: 'should',
+    section: 'given',
   });
 
   let element;
 
-  $: if (expect && element) {
-    test.setExpected(expect, element, prepare);
+  $: if (given && element) {
+    test.setActual(given, element, prepare);
   }
 </script>
 
