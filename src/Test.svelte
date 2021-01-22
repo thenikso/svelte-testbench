@@ -130,10 +130,10 @@
     </div>
     <h3 class="test-title">Given {given}: {should}</h3>
   </header>
-  <TestSection title="Actual" bind:collapsed={actualCollapsed}>
+  <TestSection title="Actual" collapsed={actualCollapsed}>
     <div bind:this={actualContainer} />
   </TestSection>
-  <TestSection title="Expected" bind:collapsed={expectedCollapsed}>
+  <TestSection title="Expected" collapsed={expectedCollapsed}>
     <div bind:this={expectedContainer} />
   </TestSection>
   <footer>
