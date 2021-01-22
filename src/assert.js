@@ -1,7 +1,7 @@
 import eq from './lib/equal';
 import pixelmatch from 'pixelmatch';
 import { AssertionError } from './errors';
-import { toCanvas } from './prepare';
+import { snapshot } from './prepare';
 
 export const equal = (a, b) => {
   if (!eq(a, b)) {
@@ -10,16 +10,16 @@ export const equal = (a, b) => {
   }
 };
 
-const defaultToCanvas = toCanvas();
+const defaultSnapshot = snapshot();
 
-export const imageMatch = (options = { threshold: 0 }) => async (a, b) => {
+export const snapshotMatch = (options = { threshold: 0 }) => async (a, b) => {
   if (Array.isArray(a)) {
     if (!Array.isArray(b) || a.length !== b.length) {
       throw new AssertionError(
         `Not the same number of images: ${a.length} != ${b.length}`,
       );
     }
-    const match = imageMatch(options);
+    const match = snapshotMatch(options);
     return Promise.all(a.map((a, i) => match(a, b[i]).catch((e) => e))).then(
       (all) => {
         const errors = all.filter((r) => r instanceof Error);
@@ -27,7 +27,9 @@ export const imageMatch = (options = { threshold: 0 }) => async (a, b) => {
         if (errors.length > 0) {
           return Promise.reject(
             new AssertionError(
-              `Some image (${errors.length}) do not match`,
+              `Some image (${errors.length}) do not match.\n• ${errors
+                .map((e) => e.message)
+                .join('\n• ')}`,
               diffs,
             ),
           );
@@ -37,8 +39,8 @@ export const imageMatch = (options = { threshold: 0 }) => async (a, b) => {
     );
   }
 
-  a = await defaultToCanvas(a);
-  b = await defaultToCanvas(b);
+  a = await defaultSnapshot(a);
+  b = await defaultSnapshot(b);
 
   if (a.width !== b.width || a.height !== b.height) {
     throw new AssertionError('Image size do not match');

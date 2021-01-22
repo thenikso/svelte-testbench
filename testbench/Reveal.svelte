@@ -2,6 +2,7 @@
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
   export let after = 1;
+  export let each = null;
 
   const dispatch = createEventDispatcher();
   const placeholder = document.createComment('revealing');
@@ -12,7 +13,25 @@
     clearTimeout(timer);
     placeholder.parentElement.insertBefore(el, placeholder);
     placeholder.remove();
-    dispatch('reveal');
+    //
+    if (each) {
+      const childs = Array.from(el.querySelectorAll(each));
+      childs.forEach((c) => (c.style.display = 'none'));
+      revealMore(childs);
+    } else {
+      dispatch('reveal');
+    }
+  }
+
+  function revealMore(items) {
+    const item = items.shift();
+    item.style.display = '';
+    if (items.length) {
+      dispatch('almost', { still: items.length });
+      setTimeout(() => revealMore(items), after * 1000);
+    } else {
+      dispatch('reveal');
+    }
   }
 
   onMount(() => {

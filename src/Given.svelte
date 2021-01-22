@@ -12,13 +12,13 @@
     section: 'given',
   });
 
-  let el;
+  let element;
 
-  $: if (actual && el && prepare) {
-    test.setActual(actual, el, resolvePrepare(prepare));
+  $: if (actual && element && prepare) {
+    test.setActual(actual, element, resolvePrepare(prepare));
   }
 </script>
 
-<div bind:this={el}>
+<div bind:this={element}>
   <slot />
 </div>

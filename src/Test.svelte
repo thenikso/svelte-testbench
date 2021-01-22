@@ -130,7 +130,7 @@
         {:then result}
           <slot name="success" {result} />
         {:catch error}
-          <slot name="fail" {error}>{error.message}</slot>
+          <slot name="fail" {error}><pre>{error.message}</pre></slot>
         {/await}
       </div>
     {/if}

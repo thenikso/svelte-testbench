@@ -13,33 +13,43 @@ export const select = (selector) => (input) => {
   return res;
 };
 
+// Promise resolves
+
+export const waitPromises = async (input) => {
+  if (Array.isArray(input)) {
+    return await Promise.all(input);
+  }
+  return await input;
+};
+
 // Waiting
 
 const waitingOk = new Map();
 
 export const waitOk = () => {
   const test = getTest(true);
-  const deferred = defer();
-  waitingOk.set(test, deferred.resolve);
+  const ok = defer();
+  waitingOk.set(test, ok.resolve);
   return async (input) => {
-    await deferred.promise;
-    return input;
+    await ok.promise;
+    return waitPromises(input);
   };
 };
 
+// TODO okTrigger?
 export const giveOk = () => {
   const section = getSection(true);
   const ok = waitingOk.get(section.test);
   if (!ok) {
     throw new Error(
-      `giveOk must have a waitOk prepare for the "${section.section}" test section`,
+      `giveOk requires a waitOk prepare for the "${section.section}" test section`,
     );
   }
   waitingOk.delete(section.test);
   return ok;
 };
 
-export const waitImgs = (selector = 'img') => async (input) => {
+export const waitImagesLoaded = (selector = 'img') => async (input) => {
   const imgs = select(selector);
   await Promise.all(
     imgs.map((img) => {
@@ -59,9 +69,9 @@ export const waitImgs = (selector = 'img') => async (input) => {
 // Conversions
 
 // TODO resize
-export const toCanvas = (options) => async (input) => {
+export const snapshot = (options) => async (input) => {
   if (Array.isArray(input)) {
-    return Promise.all(input.map(toCanvas(options)));
+    return Promise.all(input.map(snapshot(options)));
   }
   if (input instanceof HTMLCanvasElement) {
     return input;
@@ -85,4 +95,51 @@ export const toCanvas = (options) => async (input) => {
 export const log = (how = 'log') => (input) => {
   console[how](input);
   return input;
+};
+
+// Capture
+
+const capturedSnapshots = new Map();
+
+export const snapshotOnTrigger = (count = 0, snapshotOptions) => {
+  const test = getTest(true);
+  const takeSnapshot = snapshot(snapshotOptions);
+  const ok = defer();
+  let okAfter = count || 0;
+  const captures = [];
+  let target;
+  const capture = async () => {
+    let res = takeSnapshot(target).catch(() => null);
+    if (!Array.isArray(res)) {
+      res = [res];
+    }
+    if (okAfter > 0) {
+      res = await Promise.all(res);
+    }
+    captures.push(...res);
+    if (--okAfter === 0) {
+      ok.resolve();
+    }
+  };
+  capturedSnapshots.set(test, capture);
+  if (okAfter <= 0) {
+    ok.resolve();
+  }
+  return async (input) => {
+    target = input;
+    await ok.promise;
+    return captures;
+  };
+};
+
+export const snapshotTrigger = () => {
+  const section = getSection(true);
+  const capture = capturedSnapshots.get(section.test);
+  if (!capture) {
+    throw new Error(
+      `snapshotTrigger requires a snapshotOnTrigger prepare for the "${section.section}" test section`,
+    );
+  }
+  capturedSnapshots.delete(section.test);
+  return capture;
 };
