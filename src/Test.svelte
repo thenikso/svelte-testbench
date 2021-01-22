@@ -86,7 +86,12 @@
     expectedContainer.appendChild(expectedWrapper);
   }
 
-  $: if (!expectedResult && expectedPrepare && expectedWrapper) {
+  $: if (
+    !expectedResult &&
+    expectedPrepare &&
+    expectedWrapper &&
+    expectedContainer
+  ) {
     expectedResult = Promise.resolve().then(() =>
       expectedPrepare(expectedWrapper),
     );
@@ -148,9 +153,11 @@
   <TestSection title="Actual" collapsed={actualCollapsed}>
     <div bind:this={actualContainer} />
   </TestSection>
-  <TestSection title="Expected" collapsed={expectedCollapsed}>
-    <div bind:this={expectedContainer} />
-  </TestSection>
+  {#if expectedWrapper}
+    <TestSection title="Expected" collapsed={expectedCollapsed}>
+      <div bind:this={expectedContainer} />
+    </TestSection>
+  {/if}
   <footer>
     <div>
       <span class="test-result">{testStatus}</span>
