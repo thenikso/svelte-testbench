@@ -3,7 +3,7 @@
   import TestSection from './components/TestSection.svelte';
   import { setTest, getDescribe } from './lib/context';
   import { setTimeout } from './lib/utils';
-  import { TimeoutError } from './errors';
+  import { TimeoutError, AssertionMultiError } from './errors';
   import { equal } from './assert';
   import resolvePrepare from './lib/resolvePrepare';
   import { PREPARING, PENDING, SUCCESS, FAIL } from './lib/statuses';
@@ -170,7 +170,14 @@
         {:then result}
           <slot name="success" {result} />
         {:catch error}
-          <slot name="fail" {error}><pre>{error.message}</pre></slot>
+          <slot name="fail" {error}>
+            <pre>{error.message}</pre>
+            {#if error instanceof AssertionMultiError}
+              {#each error.errors as e}
+                <pre>• {e.message}</pre>
+              {/each}
+            {/if}
+          </slot>
         {/await}
       </div>
     {/if}

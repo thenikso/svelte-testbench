@@ -10,3 +10,10 @@ export class AssertionError extends Error {
     this.diff = diff;
   }
 }
+
+export class AssertionMultiError extends Error {
+  constructor(errors) {
+    super(`Multiple assertions failed: ${errors.length}`);
+    this.errors = errors;
+  }
+}

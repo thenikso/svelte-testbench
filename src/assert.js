@@ -1,6 +1,6 @@
 import eq from './lib/equal';
 import pixelmatch from 'pixelmatch';
-import { AssertionError } from './errors';
+import { AssertionError, AssertionMultiError } from './errors';
 import { snapshot } from './prepare';
 
 export const equal = (a, b) => {
@@ -23,17 +23,10 @@ export const snapshotMatch = (options = { threshold: 0 }) => async (a, b) => {
     return Promise.all(a.map((a, i) => match(a, b[i]).catch((e) => e))).then(
       (all) => {
         const errors = all.filter((r) => r instanceof Error);
-        const diffs = all.map((c) => (c instanceof Error ? c.diff : c));
         if (errors.length > 0) {
-          return Promise.reject(
-            new AssertionError(
-              `Some image (${errors.length}) do not match.\n• ${errors
-                .map((e) => e.message)
-                .join('\n• ')}`,
-              diffs,
-            ),
-          );
+          return Promise.reject(new AssertionMultiError(errors));
         }
+        const diffs = all.map((c) => (c instanceof Error ? c.diff : c));
         return diffs;
       },
     );

@@ -147,6 +147,16 @@ export const snapshotTrigger = () => {
   return capture;
 };
 
+export const text = (input) => {
+  if (Array.isArray(input)) {
+    return input.map(text);
+  }
+  if (input instanceof Element) {
+    return input.innerText;
+  }
+  return String(input);
+};
+
 // Actions
 
 export const action = (label, innerPrepare) => {

@@ -79,8 +79,11 @@
   }
 
   .test-section > .test-section-container {
+    position: relative;
     padding: 10px 15px;
     background-color: white;
+    overflow: auto;
+    max-height: 600px;
   }
 
   .test-section.collapsed > header {
