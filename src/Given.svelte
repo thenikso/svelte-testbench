@@ -1,9 +1,9 @@
 <script>
   import { getTest, setSection } from './lib/context';
-  import { nodes, select } from './prepare';
+  import { resolvePrepare } from './lib/resolvePrepare';
 
   export let actual;
-  export let prepare = nodes;
+  export let prepare = null;
 
   const test = getTest(true);
 
@@ -14,10 +14,8 @@
 
   let el;
 
-  $: finalPrepare = typeof prepare === 'string' ? select(prepare) : prepare;
-
-  $: if (actual && el && finalPrepare) {
-    test.setActual(actual, el, finalPrepare);
+  $: if (actual && el && prepare) {
+    test.setActual(actual, el, resolvePrepare(prepare));
   }
 </script>
 

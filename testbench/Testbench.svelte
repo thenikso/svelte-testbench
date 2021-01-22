@@ -1,19 +1,10 @@
 <script>
-  import {
-    Suite,
-    Describe,
-    Test,
-    Given,
-    Should,
-    waitOk,
-    giveOk,
-    select,
-  } from '../src';
+  import { Suite, Describe, Test, Given, Should, waitOk, giveOk } from '../src';
   import Reveal from './Reveal.svelte';
 </script>
 
 <Test>
-  <Given actual="a revealed content" prepare={waitOk(select('li'))}>
+  <Given actual="a revealed content" prepare={[waitOk(), 'li']}>
     <Reveal after={1} on:reveal={giveOk()}>
       <ul>
         <li>A</li>

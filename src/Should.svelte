@@ -1,9 +1,9 @@
 <script>
   import { getTest, setSection } from './lib/context';
-  import { nodes, select } from './prepare';
+  import { resolvePrepare } from './lib/resolvePrepare';
 
   export let expect;
-  export let prepare = nodes;
+  export let prepare = null;
 
   const test = getTest(true);
 
@@ -14,10 +14,8 @@
 
   let element;
 
-  $: finalPrepare = typeof prepare === 'string' ? select(prepare) : prepare;
-
-  $: if (expect && element && finalPrepare) {
-    test.setExpected(expect, element, finalPrepare);
+  $: if (expect && element && prepare) {
+    test.setExpected(expect, element, resolvePrepare(prepare));
   }
 </script>
 

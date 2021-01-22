@@ -3,18 +3,18 @@ import { getTest, getSection } from './lib/context';
 
 export const nodes = (wrapper) => Array.from(wrapper.childNodes);
 
-export const select = (selector) => (wrapper) =>
-  Array.from(wrapper.querySelectorAll(selector));
+export const select = (selector) => (input) =>
+  Array.from(input.querySelectorAll(selector));
 
 const waitingOk = new Map();
 
-export const waitOk = (prepare) => {
+export const waitOk = (then) => {
   const test = getTest(true);
   const deferred = defer();
   waitingOk.set(test, deferred.resolve);
-  return async (wrapper) => {
+  return async (input) => {
     await deferred.promise;
-    return prepare(wrapper);
+    return typeof then === 'function' ? then(input) : input;
   };
 };
 
