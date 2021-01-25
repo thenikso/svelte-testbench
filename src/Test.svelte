@@ -152,7 +152,9 @@
         </button>
       {/each}
     </div>
-    <h3 class="test-title">Given {actualLabel}: {expectedLabel}</h3>
+    <h3 class="test-title">
+      Given {actualLabel || 'a test'}: {expectedLabel || '<add expected>'}
+    </h3>
   </header>
   <TestSection title="Actual" collapsed={actualCollapsed}>
     <div bind:this={actualContainer} {...actualRestProps || {}} />
