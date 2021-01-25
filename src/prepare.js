@@ -100,6 +100,16 @@ export const dataURL = (fallback = null) => (input) => {
   return fallback;
 };
 
+export const html = (fallback = null) => (input) => {
+  if (Array.isArray(input)) {
+    return input.map(html(fallback));
+  }
+  if (input instanceof Node) {
+    return input.outerHTML;
+  }
+  return fallback;
+};
+
 // Capture
 
 const capturedSnapshots = new Map();
