@@ -14,7 +14,7 @@
   let element;
 
   $: if (should && element) {
-    test.setExpected(should, element, prepare);
+    test.setExpected(should, element, prepare, $$restProps);
   }
 </script>
 

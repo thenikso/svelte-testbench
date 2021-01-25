@@ -22,6 +22,7 @@
   let actualPrepare;
   let actualResult;
   let actualCollapsed = false;
+  let actualRestProps;
 
   let expectedLabel;
   let expectedContainer;
@@ -29,6 +30,7 @@
   let expectedPrepare;
   let expectedResult;
   let expectedCollapsed = false;
+  let expectedRestProps;
 
   let testStatus = PREPARING;
 
@@ -40,21 +42,23 @@
 
   setTest({
     status,
-    setActual(str, wrapper, prepare) {
+    setActual(str, wrapper, prepare, rest) {
       if (actualWrapper && actualWrapper !== wrapper) {
         throw new Error('Actual already set');
       }
       actualLabel = str;
       actualWrapper = wrapper;
       actualPrepare = resolvePrepare(prepare || defaultPrepare);
+      actualRestProps = rest;
     },
-    setExpected(str, wrapper, prepare) {
+    setExpected(str, wrapper, prepare, rest) {
       if (expectedWrapper && expectedWrapper !== wrapper) {
         throw new Error('Expected already set');
       }
       expectedLabel = str;
       expectedWrapper = wrapper;
       expectedPrepare = resolvePrepare(prepare || defaultPrepare);
+      expectedRestProps = rest;
     },
     addAction(label, callback) {
       actions = [...actions, { label, callback }];
@@ -151,11 +155,11 @@
     <h3 class="test-title">Given {actualLabel}: {expectedLabel}</h3>
   </header>
   <TestSection title="Actual" collapsed={actualCollapsed}>
-    <div bind:this={actualContainer} />
+    <div bind:this={actualContainer} {...actualRestProps || {}} />
   </TestSection>
   {#if expectedWrapper}
     <TestSection title="Expected" collapsed={expectedCollapsed}>
-      <div bind:this={expectedContainer} />
+      <div bind:this={expectedContainer} {...expectedRestProps || {}} />
     </TestSection>
   {/if}
   <footer>

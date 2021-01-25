@@ -14,7 +14,7 @@
   let element;
 
   $: if (given && element) {
-    test.setActual(given, element, prepare);
+    test.setActual(given, element, prepare, $$restProps);
   }
 </script>
 
