@@ -69,25 +69,80 @@ export const waitImagesLoaded = (selector = 'img') => async (input) => {
 
 // Conversions
 
-export const snapshot = (options) => async (input) => {
-  if (Array.isArray(input)) {
-    return Promise.all(input.map(snapshot(options)));
+export const snapshot = (options) => {
+  const shouldResize = options && options.resize && resize(options.resize);
+  return async (input) => {
+    if (Array.isArray(input)) {
+      return Promise.all(input.map(snapshot(options)));
+    }
+    let canvas;
+    if (input instanceof HTMLCanvasElement) {
+      canvas = input;
+    } else if (input instanceof Image) {
+      canvas = document.createElement('canvas');
+      canvas.width = input.width;
+      canvas.height = input.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(input, 0, 0);
+    } else if (input instanceof Node) {
+      canvas = await html2canvas(input, options);
+    }
+    if (canvas) {
+      if (shouldResize) {
+        canvas = shouldResize(canvas);
+      }
+      return canvas;
+    }
+    throw new Error('Can not convert to canvas');
+  };
+};
+
+export const resize = (options) => (canvas) => {
+  if (!options || !(options.width || options.height)) {
+    throw new Error('To resize you need to specify width and/or height');
   }
-  if (input instanceof HTMLCanvasElement) {
-    return input;
+  if (Array.isArray(canvas)) {
+    return canvas.map(resize(options));
   }
-  if (input instanceof Image) {
-    const canvas = document.createElement('canvas');
-    canvas.width = input.width;
-    canvas.height = input.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(input, 0, 0);
+  if (!(canvas instanceof HTMLCanvasElement)) {
     return canvas;
   }
-  if (input instanceof Node) {
-    return html2canvas(input, options);
+  let { width: resizeWidth, height: resizeHeight, aspectRatio } = options;
+  if (!resizeWidth || !resizeHeight) {
+    aspectRatio = aspectRatio || canvas.width / canvas.height;
+    if (resizeWidth) {
+      resizeHeight = resizeWidth / aspectRatio;
+    } else {
+      resizeWidth = resizeHeight * aspectRatio;
+    }
   }
-  throw new Error('Can not convert to canvas');
+  resizeWidth = Math.round(resizeWidth);
+  resizeHeight = Math.round(resizeHeight);
+
+  if (resizeWidth === canvas.width && resizeHeight === canvas.height) {
+    return canvas;
+  }
+
+  const resCanvas = document.createElement('canvas');
+  resCanvas.width = Math.max(resizeWidth, canvas.width);
+  resCanvas.height = Math.max(resizeHeight, canvas.height);
+  const resCtx = resCanvas.getContext('2d');
+  resCtx.drawImage(
+    canvas,
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+    0,
+    0,
+    resizeWidth,
+    resizeHeight,
+  );
+  const res = document.createElement('canvas');
+  res.width = resizeWidth;
+  res.height = resizeHeight;
+  res.getContext('2d').drawImage(resCanvas, 0, 0);
+  return res;
 };
 
 export const dataURL = (fallback = null) => (input) => {
@@ -114,7 +169,11 @@ export const html = (fallback = null) => (input) => {
 
 const capturedSnapshots = new Map();
 
-export const snapshotOnTrigger = (count = 0, snapshotOptions) => {
+export const snapshotOnTrigger = (count, snapshotOptions) => {
+  if (typeof count === 'object') {
+    snapshotOptions = count;
+    count = count.count;
+  }
   const test = getTest(true);
   const takeSnapshot = snapshot(snapshotOptions);
   const ok = defer();

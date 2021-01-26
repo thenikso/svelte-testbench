@@ -53,7 +53,7 @@
     <Actual
       given="a slowly revealed content"
       prepare={[
-        snapshotOnTrigger(),
+        snapshotOnTrigger({ resize: { width: 300 } }),
         waitOk(),
         action('copy', [dataURL(), log(), copy(template)]),
       ]}

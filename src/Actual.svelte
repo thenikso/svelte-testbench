@@ -32,7 +32,7 @@
   {#if showPrepare && prepareResult}
     <div class="prepared">
       <h5>Prepared</h5>
-      <div>
+      <div class="prepared-content">
         <slot name="prepared" prepared={prepareResult}>
           <Show element={prepareResult} />
         </slot>

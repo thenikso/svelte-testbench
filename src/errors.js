@@ -13,6 +13,9 @@ export class AssertionError extends Error {
 
 export class AssertionMultiError extends Error {
   constructor(errors) {
+    if (!Array.isArray(errors)) {
+      errors = [errors];
+    }
     super(`Multiple assertions failed: ${errors.length}`);
     this.errors = errors;
   }
