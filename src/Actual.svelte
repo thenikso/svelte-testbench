@@ -19,7 +19,6 @@
 
   const updatePrepared = (res) => {
     prepareResult = res;
-    console.log(res);
   };
 
   onMount(() => {

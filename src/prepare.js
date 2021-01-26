@@ -76,9 +76,7 @@ export const snapshot = (options) => {
       return Promise.all(input.map(snapshot(options)));
     }
     let canvas;
-    if (input instanceof HTMLCanvasElement) {
-      canvas = input;
-    } else if (input instanceof Image) {
+    if (input instanceof HTMLCanvasElement || input instanceof Image) {
       canvas = document.createElement('canvas');
       canvas.width = input.width;
       canvas.height = input.height;
