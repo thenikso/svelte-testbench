@@ -5,7 +5,7 @@ import { snapshot } from './prepare';
 
 export const equal = (a, b) => {
   if (!eq(a, b)) {
-    // TODO better reppresent errors
+    // TODO better reppresent errors with diff
     throw new AssertionError('a !== b');
   }
 };

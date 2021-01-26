@@ -6,7 +6,9 @@
     Actual,
     Expect,
     Show,
+    // asserts
     snapshotMatch,
+    // prepares
     waitOk,
     giveOk,
     snapshot,

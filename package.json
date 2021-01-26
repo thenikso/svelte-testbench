@@ -4,6 +4,9 @@
   "main": "dist/index.js",
   "svelte": "src/index.js",
   "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/thenikso/svelte-testbench"
+  },
   "scripts": {
     "build": "rollup -c",
     "testbench": "rollup --config testbench/rollup.config.js -w",
