@@ -7,6 +7,7 @@
   import { equal } from './assert';
   import resolvePrepare from './lib/resolvePrepare';
   import { PREPARING, PENDING, SUCCESS, FAIL } from './lib/statuses';
+  import Show from './Show.svelte';
 
   export let assert = null;
   export let prepare = null;
@@ -188,6 +189,9 @@
             {#if error instanceof AssertionMultiError}
               {#each error.errors as e}
                 <pre>• {e.message}</pre>
+                {#if e.diff}
+                  <Show element={e.diff} />
+                {/if}
               {/each}
             {/if}
           </slot>
