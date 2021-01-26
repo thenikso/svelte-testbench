@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { getTest, setSection } from './lib/context';
 
   export let should;
@@ -13,9 +14,9 @@
 
   let element;
 
-  $: if (should && element) {
+  onMount(() => {
     test.setExpected(should, element, prepare, $$restProps);
-  }
+  });
 </script>
 
 <div bind:this={element}>

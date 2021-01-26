@@ -1,8 +1,11 @@
 <script>
+  import { onMount } from 'svelte';
   import { getTest, setSection } from './lib/context';
+  import Show from './Show.svelte';
 
   export let given;
   export let prepare = null;
+  export let showPrepare = $$slots.prepared || false;
 
   const test = getTest(true);
 
@@ -12,12 +15,28 @@
   });
 
   let element;
+  let prepareResult;
 
-  $: if (given && element) {
-    test.setActual(given, element, prepare, $$restProps);
-  }
+  const updatePrepared = (res) => {
+    prepareResult = res;
+    console.log(res);
+  };
+
+  onMount(() => {
+    test.setActual(given, element, prepare, $$restProps, updatePrepared);
+  });
 </script>
 
 <div bind:this={element}>
   <slot />
+  {#if showPrepare && prepareResult}
+    <div class="prepared">
+      <h5>Prepared</h5>
+      <div>
+        <slot name="prepared" prepared={prepareResult}>
+          <Show element={prepareResult} />
+        </slot>
+      </div>
+    </div>
+  {/if}
 </div>

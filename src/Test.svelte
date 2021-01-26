@@ -23,6 +23,7 @@
   let actualResult;
   let actualCollapsed = false;
   let actualRestProps;
+  let actualPrepareReportUpdate;
 
   let expectedLabel;
   let expectedContainer;
@@ -42,7 +43,7 @@
 
   setTest({
     status,
-    setActual(str, wrapper, prepare, rest) {
+    setActual(str, wrapper, prepare, rest, reportPrepare) {
       if (actualWrapper && actualWrapper !== wrapper) {
         throw new Error('Actual already set');
       }
@@ -50,6 +51,7 @@
       actualWrapper = wrapper;
       actualPrepare = resolvePrepare(prepare || defaultPrepare);
       actualRestProps = rest;
+      actualPrepareReportUpdate = reportPrepare;
     },
     setExpected(str, wrapper, prepare, rest) {
       if (expectedWrapper && expectedWrapper !== wrapper) {
@@ -110,7 +112,12 @@
       ),
       Promise.all([actualResult, expectedResult]),
     ])
-      .then((res) => resolvedAssert(...res))
+      .then(([actual, expected]) => {
+        if (actualPrepareReportUpdate) {
+          actualPrepareReportUpdate(actual);
+        }
+        return resolvedAssert(actual, expected);
+      })
       .then((res) => {
         testStatus = SUCCESS;
         actualCollapsed = !!expectedResult;

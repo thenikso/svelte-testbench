@@ -58,6 +58,7 @@
         action('copy', [dataURL(), log(), copy(template)]),
       ]}
       style="width: 300px"
+      showPrepare
     >
       <Reveal
         each="li"
