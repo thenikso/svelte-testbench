@@ -3,10 +3,10 @@ import pixelmatch from 'pixelmatch';
 import { AssertionError, AssertionMultiError } from './errors';
 import { snapshot } from './prepare';
 
-export const equal = (a, b) => {
-  if (!eq(a, b)) {
+export const equal = (shouldEqual = true) => (a, b) => {
+  if (eq(a, b) === !shouldEqual) {
     // TODO better reppresent errors with diff
-    throw new AssertionError('a !== b');
+    throw new AssertionError(shouldEqual ? 'a != b' : 'a == b');
   }
 };
 

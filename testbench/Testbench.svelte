@@ -7,6 +7,7 @@
     Expected,
     Show,
     // asserts
+    equal,
     snapshotMatch,
     // prepares
     waitOk,
@@ -24,6 +25,21 @@
   const template = (imgs) =>
     imgs.map((src, i) => `<img alt="expected-${i}" src="${src}" />`).join('\n');
 </script>
+
+<Test assert={equal(false)}>
+  <Actual given="a list">
+    <ul>
+      <li>A</li>
+      <li>B</li>
+    </ul>
+  </Actual>
+  <Expected should="do NOT look like this">
+    <ul>
+      <li>A</li>
+      <li>C</li>
+    </ul>
+  </Expected>
+</Test>
 
 <Describe title="Examples" assert={snapshotMatch()}>
   <Test>

@@ -13,7 +13,7 @@
   export let prepare = null;
   export let timeout = null;
 
-  let resolvedAssert = assert || equal;
+  let resolvedAssert = assert || equal();
   let defaultPrepare = prepare;
   let resolvedTimeout = timeout || 5000;
 
@@ -67,7 +67,7 @@
       actions = [...actions, { label, callback }];
     },
     suggestConfig(config) {
-      resolvedAssert = assert || config.assert || equal;
+      resolvedAssert = assert || config.assert || equal();
       defaultPrepare = prepare || config.prepare;
       resolvedTimeout = timeout || config.timeout || 5000;
     },
