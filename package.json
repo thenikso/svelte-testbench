@@ -9,9 +9,10 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "prepublish": "rollup -c",
     "testbench": "rollup --config testbench/rollup.config.js -w",
-    "start": "sirv testbench/public",
-    "prepublish": "rollup -c"
+    "testbench:build": "rollup --config testbench/rollup.config.js",
+    "testbench:start": "sirv testbench/public"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
