@@ -179,6 +179,7 @@ export const snapshotOnTrigger = (count, snapshotOptions) => {
   const captures = [];
   let target;
   const capture = async () => {
+    if (count > 0 && okAfter === 0) return;
     let res = takeSnapshot(target).catch(() => null);
     if (!Array.isArray(res)) {
       res = [res];
