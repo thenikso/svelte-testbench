@@ -20,5 +20,15 @@
 </script>
 
 <div bind:this={element}>
-  <slot />
+  <slot>
+    <div class="no-expected-content">
+      No expected content. Add it to &lt;Expected&gt;...&lt;/Expected&gt;
+    </div>
+  </slot>
 </div>
+
+<style>
+  .no-expected-content {
+    opacity: 0.3;
+  }
+</style>
