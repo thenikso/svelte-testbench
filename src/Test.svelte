@@ -161,7 +161,7 @@
       {/each}
     </div>
     <h3 class="test-title">
-      Given {actualLabel || 'a test'}: {expectedLabel || '<add expected>'}
+      Given {actualLabel || 'a test'}: should {expectedLabel || '<add expected>'}
     </h3>
   </header>
   <TestSection title="Actual" collapsed={actualCollapsed}>
